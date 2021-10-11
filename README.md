@@ -87,7 +87,7 @@ There are chances that the kubeadm init command is going to fail saying the diff
 
 It's recommended that we use systemd as cgroup driver for both of the services. To restart docker with systemd as cgroup driver, change the service file (**/lib/systemd/system/docker.service**) for docker to accept cgroup driver
 ```
-**ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --exec-opt native.cgroupdriver=systemd**
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --exec-opt native.cgroupdriver=systemd
 ```
 and then restart the docker service
 
