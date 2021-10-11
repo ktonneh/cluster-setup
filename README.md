@@ -81,6 +81,18 @@ export MASTER_IP=<IP-of-Node>
 kubeadm init --apiserver-advertise-address=${MASTER_IP} --pod-network-cidr=10.244.0.0/16
 ```
 
+Configure docker's cgroup driver
+There are chances that the kubeadm init command is going to fail saying the different cgroup drvers are being used in the kubelet (systemd) and docker (cgroupfs) service. To resolve that we will make sure that both the services are running with the same cgroup driver. It's recommended that we use systemd as cgroup driver for both of the services. To restart docker with systemd as cgroup driver, change the service file (/lib/systemd/system/docker.service) for docker to accept cgroup driver
+
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock --exec-opt native.cgroupdriver=systemd
+and then restart the docker service
+
+# reload unit/config files
+systemctl daemon-reload
+# restart docker service
+systemctl restart docker
+You will have to do this on all the other instances as well.
+
 #### Join worker nodes to the Leader node
 
 Once the command `kubeadm init` is completed on the leader node, below we would get a command like below in the output of `kubeadm init` that can be run on worker nodes to make them join the leader node.
@@ -89,6 +101,10 @@ Once the command `kubeadm init` is completed on the leader node, below we would 
 kubeadm join 206.189.134.39:6443 --token dxxfoj.a2zzwbfrjejzir4h \
     --discovery-token-ca-cert-hash sha256:110e853989c2401b1e54aef6e8ff0393e05f18d531a75ed107cf6c05ca4170eb
 ```
+
+You can also run the below cluster join command
+
+kubeadm token create --print-join-command
 
 ### Install CNI plugin
 
@@ -101,6 +117,13 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documen
 ### Setting up Kubeconfig file
 
 After successful completion of `kubeadm init` command, like we got the `kubeadm join` command, we would also get details about how we can set up `kubeconfig` file.
+
+For a Root User
+
+For Non Root Userr
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 
 
