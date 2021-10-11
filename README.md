@@ -124,9 +124,9 @@ After successful completion of `kubeadm init` command, like we got the `kubeadm 
 For a Root User
 
 For Non Root Userr
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+**mkdir -p $HOME/.kube**
+**sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config**
+**sudo chown $(id -u):$(id -g) $HOME/.kube/config**
 
 
 
