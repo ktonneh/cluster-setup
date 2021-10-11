@@ -37,6 +37,35 @@ sudo apt-get install -y kubelet kubeadm kubectl
 # install docker
 sudo apt-get install docker.io
 
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+
+Import the repository’s GPG key using the following curl command:
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+
+Add the Docker APT repository to your system:
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+To install the latest version of Docker, run the commands below
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io
+
+To install a specific version, first list all the available versions in the Docker repository:
+
+sudo apt update
+apt list -a docker-ce
+
+output
+docker-ce/focal 5:19.03.9~3-0~ubuntu-focal amd64
+
+sudo apt install docker-ce=<VERSION> docker-ce-cli=<VERSION> containerd.io
+
+
+Check docker status
+
+sudo systemctl status docker
+
 # apt-mark hold is used so that these packages will not be updated/removed automatically
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
